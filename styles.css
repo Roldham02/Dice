@@ -19,7 +19,7 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-width: 800px; 
+    max-width: 800px;
     margin: 0 auto;
 }
 
@@ -37,7 +37,7 @@ h2 {
     margin-bottom: 20px;
 }
 
-input[type="number"] {
+input[type="number"], select {
     flex: 1;
     min-width: 80px;
     padding: 12px;
@@ -110,54 +110,20 @@ button:active {
 
 .dice {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 60px;
-    height: 60px;
-    font-size: 60px; 
+    width: 80px;
+    height: 80px;
+    font-size: 24px;
     background-color: white;
     color: black;
     border-radius: 10px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     position: relative;
+    margin: 10px;
 }
 
-.dice::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 10px;
-    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
-}
-
-@keyframes rollDice {
-    0% { transform: rotateX(0deg) rotateY(0deg); }
-    25% { transform: rotateX(180deg) rotateY(90deg); }
-    50% { transform: rotateX(360deg) rotateY(180deg); }
-    75% { transform: rotateX(180deg) rotateY(270deg); }
-    100% { transform: rotateX(0deg) rotateY(360deg); }
-}
-
-.rolling {
-    animation: rollDice 0.5s linear;
-}
-
-#total-result {
-    font-size: 24px;
-    font-weight: bold;
-    color: #4a90e2;
-    margin-top: 20px;
-}
-
-@media (max-width: 768px) {
-    #timer-controls, #dice-controls {
-        flex-direction: column;
-    }
-
-    input[type="number"], button {
-        width: 100%;
-    }
-}
+.dice span {
+    font-size: 32px;
+    font-weight: bol
