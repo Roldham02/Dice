@@ -95,7 +95,8 @@ function displayDiceResults(results, diceTypes) {
     
     individualResults.innerHTML = results.map((result, index) => 
         `<div class="dice d${diceTypes[index]}">
-            <span>${result}</span>
+            <span class="dice-value">${result}</span>
+            <span class="dice-label"></span>
             <select class="dice-type-select">
                 <option value="4" ${diceTypes[index] === 4 ? 'selected' : ''}>D4</option>
                 <option value="6" ${diceTypes[index] === 6 ? 'selected' : ''}>D6</option>
@@ -119,6 +120,7 @@ function displayDiceResults(results, diceTypes) {
     });
 
     addDiceChangeListeners();
+    addDiceSelectionListeners();
 }
 
 function addDiceChangeListeners() {
@@ -130,7 +132,7 @@ function addDiceChangeListeners() {
             const newResult = Math.floor(Math.random() * newDiceType) + 1;
             const diceElement = select.closest('.dice');
             diceElement.className = `dice d${newDiceType}`;
-            diceElement.querySelector('span').textContent = newResult;
+            diceElement.querySelector('.dice-value').textContent = newResult;
             
             updateStats(newDiceType, newResult);
             updateTotal();
@@ -140,7 +142,7 @@ function addDiceChangeListeners() {
 }
 
 function updateTotal() {
-    const diceElements = document.querySelectorAll('.dice span');
+    const diceElements = document.querySelectorAll('.dice .dice-value');
     const total = Array.from(diceElements).reduce((sum, die) => sum + parseInt(die.textContent), 0);
     document.getElementById('total-result').textContent = `Total: ${total}`;
 }
@@ -163,6 +165,31 @@ function displayStats() {
             `;
         }
     }
+}
+
+document.getElementById('apply-customization').addEventListener('click', applyCustomization);
+
+function applyCustomization() {
+    const color = document.getElementById('dice-color').value;
+    const label = document.getElementById('dice-label').value;
+    const selectedDice = document.querySelectorAll('.dice.selected');
+    
+    selectedDice.forEach(die => {
+        die.style.backgroundColor = color;
+        if (label) {
+            die.dataset.label = label;
+            die.querySelector('.dice-label').textContent = label;
+        }
+    });
+}
+
+function addDiceSelectionListeners() {
+    const diceElements = document.querySelectorAll('.dice');
+    diceElements.forEach(die => {
+        die.addEventListener('click', () => {
+            die.classList.toggle('selected');
+        });
+    });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
