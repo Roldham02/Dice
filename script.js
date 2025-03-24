@@ -75,9 +75,23 @@ function displayDiceResults(results) {
     const individualResults = document.getElementById('individual-results');
     const totalResult = document.getElementById('total-result');
     
-    individualResults.innerHTML = results.map(result => `<span class="dice">${result}</span>`).join(' ');
+    individualResults.innerHTML = results.map(result => `<span class="dice">${getDiceFace(result)}</span>`).join(' ');
     const total = results.reduce((sum, current) => sum + current, 0);
     totalResult.textContent = `Total: ${total}`;
+
+    // Apply rolling animation
+    const diceElements = individualResults.querySelectorAll('.dice');
+    diceElements.forEach(die => {
+        die.classList.add('rolling');
+        die.addEventListener('animationend', () => {
+            die.classList.remove('rolling');
+        }, {once: true});
+    });
+}
+
+function getDiceFace(number) {
+    const diceFaces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+    return diceFaces[number - 1];
 }
 
 // Load saved timer state
