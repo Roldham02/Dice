@@ -95,6 +95,10 @@ button:active {
     color: #a0a0a0;
 }
 
+#dice-roller-section {
+    background-image: linear-gradient(to bottom, #3a3a3a, #2a2a2a);
+}
+
 #dice-results {
     margin-top: 20px;
     text-align: center;
@@ -116,6 +120,7 @@ button:active {
     color: white;
     border-radius: 5px;
     margin: 0 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 #total-result {
