@@ -37,7 +37,7 @@ h2 {
     margin-bottom: 20px;
 }
 
-input[type="number"], select {
+input[type="number"], select, #dice-image-url {
     flex: 1;
     min-width: 80px;
     padding: 12px;
@@ -70,7 +70,7 @@ button:active {
     box-shadow: none;
 }
 
-#timer-controls, #dice-controls {
+#timer-controls, #dice-controls, #dice-customization {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
@@ -108,4 +108,78 @@ button:active {
     gap: 10px;
 }
 
-.dice
+.dice {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+    font-size: 24px;
+    background-color: white;
+    color: black;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    position: relative;
+    margin: 10px;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+}
+
+.dice.selected {
+    box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.7);
+}
+
+.dice-value {
+    font-size: 32px;
+    font-weight: bold;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.dice-type-select {
+    margin-top: 5px;
+    font-size: 12px;
+}
+
+.d4 { background-color: #FF6B6B; }
+.d6 { background-color: #4ECDC4; }
+.d8 { background-color: #45B7D1; }
+.d10 { background-color: #F7B731; }
+.d12 { background-color: #A55EEA; }
+.d20 { background-color: #FF9FF3; }
+
+@keyframes rollDice {
+    0% { transform: rotateX(0deg) rotateY(0deg); }
+    25% { transform: rotateX(180deg) rotateY(90deg); }
+    50% { transform: rotateX(360deg) rotateY(180deg); }
+    75% { transform: rotateX(180deg) rotateY(270deg); }
+    100% { transform: rotateX(0deg) rotateY(360deg); }
+}
+
+.rolling {
+    animation: rollDice 0.5s linear;
+}
+
+#total-result {
+    font-size: 24px;
+    font-weight: bold;
+    color: #4a90e2;
+    margin-top: 20px;
+}
+
+#dice-stats {
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+@media (max-width: 768px) {
+    #timer-controls, #dice-controls, #dice-customization {
+        flex-direction: column;
+    }
+
+    input[type="number"], select, button, #dice-image-url {
+        width: 100%;
+    }
+}
