@@ -1,7 +1,6 @@
 let timerInterval;
 let remainingTime = 0;
 
-// Timer functions
 document.getElementById('start-timer').addEventListener('click', function() {
     const hours = parseInt(document.getElementById('hours').value) || 0;
     const minutes = parseInt(document.getElementById('minutes').value) || 0;
@@ -51,35 +50,43 @@ function saveTimerState() {
     }));
 }
 
-// Mouse tracker function
 document.addEventListener('mousemove', function(e) {
     document.getElementById('mouse-tracker').textContent = `X: ${e.clientX}, Y: ${e.clientY}`;
 });
 
-// Dice roller functions
-document.getElementById('roll-dice').addEventListener('click', function() {
-    const diceCount = parseInt(document.getElementById('dice-count').value) || 1;
-    const results = rollDice(diceCount);
-    displayDiceResults(results);
-});
+document.getElementById('roll-dice').addEventListener('click', rollDice);
 
-function rollDice(count) {
+function rollDice() {
+    const diceCount = parseInt(document.getElementById('dice-count').value) || 1;
+    const diceType = parseInt(document.getElementById('dice-type').value);
     const results = [];
-    for (let i = 0; i < count; i++) {
-        results.push(Math.floor(Math.random() * 6) + 1);
+    for (let i = 0; i < diceCount; i++) {
+        results.push(Math.floor(Math.random() * diceType) + 1);
     }
-    return results;
+    displayDiceResults(results, diceType);
 }
 
-function displayDiceResults(results) {
+function displayDiceResults(results, diceType) {
     const individualResults = document.getElementById('individual-results');
     const totalResult = document.getElementById('total-result');
     
-    individualResults.innerHTML = results.map(result => `<span class="dice">${getDiceFace(result)}</span>`).join(' ');
+    individualResults.innerHTML = results.map(result => 
+        `<div class="dice d${diceType}">
+            <span>${result}</span>
+            <select class="dice-type-select">
+                <option value="4" ${diceType === 4 ? 'selected' : ''}>D4</option>
+                <option value="6" ${diceType === 6 ? 'selected' : ''}>D6</option>
+                <option value="8" ${diceType === 8 ? 'selected' : ''}>D8</option>
+                <option value="10" ${diceType === 10 ? 'selected' : ''}>D10</option>
+                <option value="12" ${diceType === 12 ? 'selected' : ''}>D12</option>
+                <option value="20" ${diceType === 20 ? 'selected' : ''}>D20</option>
+            </select>
+        </div>`
+    ).join('');
+
     const total = results.reduce((sum, current) => sum + current, 0);
     totalResult.textContent = `Total: ${total}`;
 
-    // Apply rolling animation
     const diceElements = individualResults.querySelectorAll('.dice');
     diceElements.forEach(die => {
         die.classList.add('rolling');
@@ -87,14 +94,23 @@ function displayDiceResults(results) {
             die.classList.remove('rolling');
         }, {once: true});
     });
+
+    const diceTypeSelects = individualResults.querySelectorAll('.dice-type-select');
+    diceTypeSelects.forEach((select, index) => {
+        select.addEventListener('change', (event) => {
+            const newDiceType = parseInt(event.target.value);
+            const newResult = Math.floor(Math.random() * newDiceType) + 1;
+            const diceElement = select.closest('.dice');
+            diceElement.className = `dice d${newDiceType}`;
+            diceElement.querySelector('span').textContent = newResult;
+            
+            results[index] = newResult;
+            const newTotal = results.reduce((sum, current) => sum + current, 0);
+            totalResult.textContent = `Total: ${newTotal}`;
+        });
+    });
 }
 
-function getDiceFace(number) {
-    const diceFaces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
-    return diceFaces[number - 1];
-}
-
-// Load saved timer state
 document.addEventListener('DOMContentLoaded', function() {
     const savedState = JSON.parse(localStorage.getItem('timerState'));
     if (savedState) {
