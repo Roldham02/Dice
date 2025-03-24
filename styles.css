@@ -122,54 +122,20 @@ button:active {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     position: relative;
     margin: 10px;
+    cursor: pointer;
 }
 
-.dice span {
+.dice-value {
     font-size: 32px;
     font-weight: bold;
+}
+
+.dice-label {
+    font-size: 12px;
+    margin-top: 5px;
 }
 
 .dice-type-select {
     margin-top: 5px;
     font-size: 12px;
 }
-
-.d4 { background-color: #FF6B6B; }
-.d6 { background-color: #4ECDC4; }
-.d8 { background-color: #45B7D1; }
-.d10 { background-color: #F7B731; }
-.d12 { background-color: #A55EEA; }
-.d20 { background-color: #FF9FF3; }
-
-@keyframes rollDice {
-    0% { transform: rotateX(0deg) rotateY(0deg); }
-    25% { transform: rotateX(180deg) rotateY(90deg); }
-    50% { transform: rotateX(360deg) rotateY(180deg); }
-    75% { transform: rotateX(180deg) rotateY(270deg); }
-    100% { transform: rotateX(0deg) rotateY(360deg); }
-}
-
-.rolling {
-    animation: rollDice 0.5s linear;
-}
-
-#total-result {
-    font-size: 24px;
-    font-weight: bold;
-    color: #4a90e2;
-    margin-top: 20px;
-}
-
-#dice-stats {
-    margin-top: 20px;
-    font-size: 16px;
-}
-
-@media (max-width: 768px) {
-    #timer-controls, #dice-controls {
-        flex-direction: column;
-    }
-
-    input[type="number"], select, button {
-        width: 100%;
-    }
