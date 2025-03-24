@@ -1,8 +1,65 @@
+let timerInterval;
+let remainingTime = 0;
+
+document.getElementById('start-timer').addEventListener('click', function() {
+    const hours = parseInt(document.getElementById('hours').value) || 0;
+    const minutes = parseInt(document.getElementById('minutes').value) || 0;
+    const seconds = parseInt(document.getElementById('seconds').value) || 0;
+    remainingTime = hours * 3600 + minutes * 60 + seconds;
+    updateTimerDisplay();
+
+    if (timerInterval) clearInterval(timerInterval);
+
+    timerInterval = setInterval(() => {
+        if (remainingTime <= 0) {
+            clearInterval(timerInterval);
+            alert("Time's up!");
+        } else {
+            remainingTime--;
+            updateTimerDisplay();
+            saveTimerState();
+        }
+    }, 1000);
+});
+
+document.getElementById('pause-timer').addEventListener('click', function() {
+    clearInterval(timerInterval);
+});
+
+document.getElementById('reset-timer').addEventListener('click', function() {
+    clearInterval(timerInterval);
+    remainingTime = 0;
+    document.getElementById('hours').value = '';
+    document.getElementById('minutes').value = '';
+    document.getElementById('seconds').value = '';
+    updateTimerDisplay();
+    saveTimerState();
+});
+
+function updateTimerDisplay() {
+    const hours = Math.floor(remainingTime / 3600).toString().padStart(2, '0');
+    const minutes = Math.floor((remainingTime % 3600) / 60).toString().padStart(2, '0');
+    const seconds = (remainingTime % 60).toString().padStart(2, '0');
+    document.getElementById('timer-display').textContent = `${hours}:${minutes}:${seconds}`;
+}
+
+function saveTimerState() {
+    localStorage.setItem('timerState', JSON.stringify({
+        remainingTime,
+        lastUpdated: Date.now()
+    }));
+}
+
+document.addEventListener('mousemove', function(e) {
+    document.getElementById('mouse-tracker').textContent = `X: ${e.clientX}, Y: ${e.clientY}`;
+});
+
+document.getElementById('roll-dice').addEventListener('click', rollDice);
+
 function rollDice() {
     const diceCount = parseInt(document.getElementById('dice-count').value) || 1;
-    const diceTypes = Array(diceCount).fill(parseInt(document.getElementById('dice-type').value));
+    let diceTypes = Array(diceCount).fill(parseInt(document.getElementById('dice-type').value));
     
-    // Allow for different dice types if needed
     const diceTypeSelects = document.getElementById('individual-results').querySelectorAll('.dice-type-select');
     if (diceTypeSelects.length > 0) {
         diceTypes = Array.from(diceTypeSelects).map(select => parseInt(select.value));
@@ -56,3 +113,12 @@ function displayDiceResults(results, diceTypes) {
         });
     });
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const savedState = JSON.parse(localStorage.getItem('timerState'));
+    if (savedState) {
+        const elapsedTime = Math.floor((Date.now() - savedState.lastUpdated) / 1000);
+        remainingTime = Math.max(0, savedState.remainingTime - elapsedTime);
+        updateTimerDisplay();
+    }
+});
