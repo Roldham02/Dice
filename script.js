@@ -1,6 +1,14 @@
 let timerInterval;
 let remainingTime = 0;
 let currentDiceTypes = [];
+let diceStats = {
+  d4: { rolls: 0, sum: 0, frequency: {} },
+  d6: { rolls: 0, sum: 0, frequency: {} },
+  d8: { rolls: 0, sum: 0, frequency: {} },
+  d10: { rolls: 0, sum: 0, frequency: {} },
+  d12: { rolls: 0, sum: 0, frequency: {} },
+  d20: { rolls: 0, sum: 0, frequency: {} }
+};
 
 document.getElementById('start-timer').addEventListener('click', function() {
     const hours = parseInt(document.getElementById('hours').value) || 0;
@@ -65,8 +73,20 @@ function rollDice() {
         currentDiceTypes = Array(diceCount).fill(initialDiceType);
     }
     
-    const results = currentDiceTypes.map(diceType => Math.floor(Math.random() * diceType) + 1);
+    const results = currentDiceTypes.map(diceType => {
+        const result = Math.floor(Math.random() * diceType) + 1;
+        updateStats(diceType, result);
+        return result;
+    });
     displayDiceResults(results, currentDiceTypes);
+    displayStats();
+}
+
+function updateStats(diceType, result) {
+    const statKey = `d${diceType}`;
+    diceStats[statKey].rolls++;
+    diceStats[statKey].sum += result;
+    diceStats[statKey].frequency[result] = (diceStats[statKey].frequency[result] || 0) + 1;
 }
 
 function displayDiceResults(results, diceTypes) {
@@ -112,7 +132,9 @@ function addDiceChangeListeners() {
             diceElement.className = `dice d${newDiceType}`;
             diceElement.querySelector('span').textContent = newResult;
             
+            updateStats(newDiceType, newResult);
             updateTotal();
+            displayStats();
         });
     });
 }
@@ -121,6 +143,26 @@ function updateTotal() {
     const diceElements = document.querySelectorAll('.dice span');
     const total = Array.from(diceElements).reduce((sum, die) => sum + parseInt(die.textContent), 0);
     document.getElementById('total-result').textContent = `Total: ${total}`;
+}
+
+function displayStats() {
+    const statsContainer = document.getElementById('dice-stats');
+    statsContainer.innerHTML = '';
+    
+    for (const [diceType, stats] of Object.entries(diceStats)) {
+        if (stats.rolls > 0) {
+            const average = (stats.sum / stats.rolls).toFixed(2);
+            const mostFrequent = Object.entries(stats.frequency).reduce((a, b) => a[1] > b[1] ? a : b)[0];
+            
+            statsContainer.innerHTML += `
+                <p>${diceType}: 
+                   Rolls: ${stats.rolls}, 
+                   Average: ${average}, 
+                   Most frequent: ${mostFrequent}
+                </p>
+            `;
+        }
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
