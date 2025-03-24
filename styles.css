@@ -108,34 +108,4 @@ button:active {
     gap: 10px;
 }
 
-.dice {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 80px;
-    height: 80px;
-    font-size: 24px;
-    background-color: white;
-    color: black;
-    border-radius: 10px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-    position: relative;
-    margin: 10px;
-    cursor: pointer;
-}
-
-.dice-value {
-    font-size: 32px;
-    font-weight: bold;
-}
-
-.dice-label {
-    font-size: 12px;
-    margin-top: 5px;
-}
-
-.dice-type-select {
-    margin-top: 5px;
-    font-size: 12px;
-}
+.dice
