@@ -95,10 +95,6 @@ button:active {
     color: #a0a0a0;
 }
 
-#dice-roller-section {
-    background-image: linear-gradient(to bottom, #3a3a3a, #2a2a2a);
-}
-
 #dice-results {
     margin-top: 20px;
     text-align: center;
@@ -109,32 +105,4 @@ button:active {
 }
 
 .dice {
-    display: inline-block;
-    width: 40px;
-    height: 40px;
-    line-height: 40px;
-    text-align: center;
-    font-size: 20px;
-    font-weight: bold;
-    background-color: #4a90e2;
-    color: white;
-    border-radius: 5px;
-    margin: 0 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-#total-result {
-    font-size: 24px;
-    font-weight: bold;
-    color: #4a90e2;
-}
-
-@media (max-width: 768px) {
-    #timer-controls, #dice-controls {
-        flex-direction: column;
-    }
-
-    input[type="number"], button {
-        width: 100%;
-    }
-}
+    display: inli
