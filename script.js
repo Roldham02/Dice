@@ -1,5 +1,6 @@
 let timerInterval;
 let remainingTime = 0;
+let timerRunning = false;
 let currentDiceTypes = [];
 let customDiceColors = [];
 let customDiceImages = [];
@@ -12,18 +13,30 @@ let diceStats = {
   d20: { rolls: 0, sum: 0, frequency: {} }
 };
 
-document.getElementById('start-timer').addEventListener('click', function() {
+document.getElementById('start-timer').addEventListener('click', startTimer);
+document.getElementById('pause-timer').addEventListener('click', pauseTimer);
+document.getElementById('resume-timer').addEventListener('click', resumeTimer);
+document.getElementById('reset-timer').addEventListener('click', resetTimer);
+
+function startTimer() {
     const hours = parseInt(document.getElementById('hours').value) || 0;
     const minutes = parseInt(document.getElementById('minutes').value) || 0;
     const seconds = parseInt(document.getElementById('seconds').value) || 0;
     remainingTime = hours * 3600 + minutes * 60 + seconds;
-    updateTimerDisplay();
+    
+    if (remainingTime > 0) {
+        updateTimerDisplay();
+        runTimer();
+    }
+}
 
-    if (timerInterval) clearInterval(timerInterval);
-
+function runTimer() {
+    clearInterval(timerInterval);
+    timerRunning = true;
     timerInterval = setInterval(() => {
         if (remainingTime <= 0) {
             clearInterval(timerInterval);
+            timerRunning = false;
             alert("Time's up!");
         } else {
             remainingTime--;
@@ -31,36 +44,29 @@ document.getElementById('start-timer').addEventListener('click', function() {
             saveTimerState();
         }
     }, 1000);
-});
+}
 
-document.getElementById('pause-timer').addEventListener('click', function() {
+function pauseTimer() {
     clearInterval(timerInterval);
-});
+    timerRunning = false;
+}
 
-document.getElementById('resume-timer').addEventListener('click', function() {
-    if (!timerInterval) {
-        timerInterval = setInterval(() => {
-            if (remainingTime <= 0) {
-                clearInterval(timerInterval);
-                alert("Time's up!");
-            } else {
-                remainingTime--;
-                updateTimerDisplay();
-                saveTimerState();
-            }
-        }, 1000);
+function resumeTimer() {
+    if (!timerRunning && remainingTime > 0) {
+        runTimer();
     }
-});
+}
 
-document.getElementById('reset-timer').addEventListener('click', function() {
+function resetTimer() {
     clearInterval(timerInterval);
+    timerRunning = false;
     remainingTime = 0;
     document.getElementById('hours').value = '';
     document.getElementById('minutes').value = '';
     document.getElementById('seconds').value = '';
     updateTimerDisplay();
     saveTimerState();
-});
+}
 
 function updateTimerDisplay() {
     const hours = Math.floor(remainingTime / 3600).toString().padStart(2, '0');
