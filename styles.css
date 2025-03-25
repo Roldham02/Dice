@@ -169,10 +169,10 @@ button:active {
 }
 
 #total-result {
-    font-size: 24px;
+    font-size: 36px;
     font-weight: bold;
     color: #4a90e2;
-    margin-top: 20px;
+    margin-top: 40px;
 }
 
 #dice-stats {
