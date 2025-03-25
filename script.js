@@ -1,6 +1,8 @@
 let timerInterval;
 let remainingTime = 0;
 let currentDiceTypes = [];
+let customDiceColors = [];
+let customDiceImages = [];
 let diceStats = {
   d4: { rolls: 0, sum: 0, frequency: {} },
   d6: { rolls: 0, sum: 0, frequency: {} },
@@ -33,6 +35,21 @@ document.getElementById('start-timer').addEventListener('click', function() {
 
 document.getElementById('pause-timer').addEventListener('click', function() {
     clearInterval(timerInterval);
+});
+
+document.getElementById('resume-timer').addEventListener('click', function() {
+    if (!timerInterval) {
+        timerInterval = setInterval(() => {
+            if (remainingTime <= 0) {
+                clearInterval(timerInterval);
+                alert("Time's up!");
+            } else {
+                remainingTime--;
+                updateTimerDisplay();
+                saveTimerState();
+            }
+        }, 1000);
+    }
 });
 
 document.getElementById('reset-timer').addEventListener('click', function() {
@@ -71,6 +88,8 @@ function rollDice() {
     
     if (currentDiceTypes.length !== diceCount) {
         currentDiceTypes = Array(diceCount).fill(initialDiceType);
+        customDiceColors = Array(diceCount).fill(null);
+        customDiceImages = Array(diceCount).fill(null);
     }
     
     const results = currentDiceTypes.map(diceType => {
@@ -94,9 +113,12 @@ function displayDiceResults(results, diceTypes) {
     const totalResult = document.getElementById('total-result');
     
     individualResults.innerHTML = results.map((result, index) => 
-        `<div class="dice d${diceTypes[index]}">
+        `<div class="dice d${diceTypes[index]}" 
+              style="background-color: ${customDiceColors[index] || ''}; 
+                     background-image: url(${customDiceImages[index] || ''}); 
+                     background-size: cover; 
+                     background-position: center;">
             <span class="dice-value">${result}</span>
-            <span class="dice-label"></span>
             <select class="dice-type-select">
                 <option value="4" ${diceTypes[index] === 4 ? 'selected' : ''}>D4</option>
                 <option value="6" ${diceTypes[index] === 6 ? 'selected' : ''}>D6</option>
@@ -171,14 +193,24 @@ document.getElementById('apply-customization').addEventListener('click', applyCu
 
 function applyCustomization() {
     const color = document.getElementById('dice-color').value;
-    const label = document.getElementById('dice-label').value;
+    const imageUrl = document.getElementById('dice-image-url').value;
     const selectedDice = document.querySelectorAll('.dice.selected');
     
     selectedDice.forEach(die => {
-        die.style.backgroundColor = color;
-        if (label) {
-            die.dataset.label = label;
-            die.querySelector('.dice-label').textContent = label;
+        const index = Array.from(die.parentNode.children).indexOf(die);
+        if (color !== '#FFFFFF') {
+            die.style.backgroundColor = color;
+            customDiceColors[index] = color;
+            customDiceImages[index] = '';
+            die.style.backgroundImage = '';
+        }
+        if (imageUrl) {
+            die.style.backgroundImage = `url(${imageUrl})`;
+            die.style.backgroundSize = 'cover';
+            die.style.backgroundPosition = 'center';
+            customDiceImages[index] = imageUrl;
+            customDiceColors[index] = '';
+            die.style.backgroundColor = '';
         }
     });
 }
