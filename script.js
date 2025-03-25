@@ -136,6 +136,7 @@ function displayDiceResults(results, diceTypes) {
         </div>`
     ).join('');
 
+
     const total = results.reduce((sum, current) => sum + current, 0);
     totalResult.textContent = `Total: ${total}`;
 
